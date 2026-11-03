@@ -108,6 +108,24 @@
             border-left: 3px solid var(--sw-primary);
         }
 
+        /* ===== NOTIFIKASI: lencana angka bulat kecil di menu sidebar ===== */
+        .sw-notif {
+            margin-left: auto;
+            min-width: 16px;
+            height: 16px;
+            padding: 0 4px;
+            border-radius: 999px;
+            background-color: #93C5FD;
+            color: var(--sw-navy);
+            font-size: 0.65rem;
+            font-weight: 700;
+            line-height: 16px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        /* ================================================================= */
+
         .topbar {
             display: flex;
             justify-content: space-between;
@@ -318,19 +336,31 @@
         @endif
 
         <div class="nav-section">Monitoring</div>
+        {{-- NOTIFIKASI: website down yang belum dilihat --}}
         <a href="{{ route('monitoring.index') }}" class="{{ request()->routeIs('monitoring.*') ? 'active' : '' }}">
             <i class="bi bi-clock-history"></i> Riwayat Monitoring
+            @if (($notifCounts['down'] ?? 0) > 0)
+            <span class="sw-notif" title="{{ $notifCounts['down'] }} website down baru">{{ $notifCounts['down'] > 99 ? '99+' : $notifCounts['down'] }}</span>
+            @endif
         </a>
 
         @if (auth()->user()->role === 'admin')
+        {{-- NOTIFIKASI: SSL akan kedaluwarsa yang belum dilihat --}}
         <a href="{{ route('ssl-warnings.index') }}" class="{{ request()->routeIs('ssl-warnings.*') ? 'active' : '' }}">
             <i class="bi bi-shield-exclamation"></i> Peringatan SSL
+            @if (($notifCounts['ssl'] ?? 0) > 0)
+            <span class="sw-notif" title="{{ $notifCounts['ssl'] }} peringatan SSL baru">{{ $notifCounts['ssl'] > 99 ? '99+' : $notifCounts['ssl'] }}</span>
+            @endif
         </a>
         <a href="{{ route('suspicious-keywords.index') }}" class="{{ request()->routeIs('suspicious-keywords.*') ? 'active' : '' }}">
             <i class="bi bi-slash-circle"></i> Kata Diblokir
         </a>
+        {{-- NOTIFIKASI: konten mencurigakan yang belum dilihat --}}
         <a href="{{ route('suspicious-content-report.index') }}" class="{{ request()->routeIs('suspicious-content-report.*') ? 'active' : '' }}">
             <i class="bi bi-exclamation-triangle"></i> Laporan Konten Mencurigakan
+            @if (($notifCounts['suspicious'] ?? 0) > 0)
+            <span class="sw-notif" title="{{ $notifCounts['suspicious'] }} konten mencurigakan baru">{{ $notifCounts['suspicious'] > 99 ? '99+' : $notifCounts['suspicious'] }}</span>
+            @endif
         </a>
         <a href="{{ route('compliance-score.index') }}" class="{{ request()->routeIs('compliance-score.*') ? 'active' : '' }}">
             <i class="bi bi-check2-square"></i> Compliance Score
@@ -358,16 +388,123 @@
     </div>
 
     <div class="main-content">
-        @if (session('success'))
-        <div class="alert alert-success py-2">{{ session('success') }}</div>
-        @endif
-
-        @if (session('error'))
-        <div class="alert alert-danger py-2">{{ session('error') }}</div>
-        @endif
-
         @yield('content')
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Konfirmasi hapus di tengah layar untuk semua form dengan class "form-delete"
+            document.querySelectorAll('.form-delete').forEach(function(form) {
+                form.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const text = form.dataset.confirmText || 'Data yang dihapus tidak dapat dikembalikan.';
+                    Swal.fire({
+                        title: 'Yakin ingin menghapus?',
+                        text: text,
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Ya, hapus',
+                        cancelButtonText: 'Batal',
+                        confirmButtonColor: '#DC2626',
+                        cancelButtonColor: '#64748B',
+                        reverseButtons: true
+                    }).then(function(result) {
+                        if (result.isConfirmed) {
+                            form.submit();
+                        }
+                    });
+                });
+            });
+
+            // Notifikasi hasil aksi (muncul di tengah layar dengan ikon centang jika sukses)
+            @if(session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: @json(session('success')),
+                timer: 2000,
+                showConfirmButton: false
+            });
+            @endif
+
+            @if(session('error'))
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: @json(session('error')),
+                timer: 2500,
+                showConfirmButton: false
+            });
+            @endif
+        });
+
+        // ===== PREVIEW EXPORT: tampilkan preview sebelum mengunduh laporan =====
+        // Setiap link yang berakhiran "/export" (tombol Export Excel) dicegat,
+        // lalu ditampilkan preview dengan pilihan unduh Excel atau PDF.
+        document.addEventListener('click', function(e) {
+            const link = e.target.closest('a[href]');
+            if (!link) return;
+
+            const url = new URL(link.href, window.location.origin);
+            if (!/\/export$/.test(url.pathname)) return;
+
+            e.preventDefault();
+
+            const parts = url.pathname.split('/').filter(Boolean);
+            const report = parts[parts.length - 2];
+            const previewUrl = @json(url('export-preview')) + '/' + report + url.search;
+            const pdfUrl = @json(url('export-pdf')) + '/' + report + url.search;
+
+            Swal.fire({
+                title: 'Preview Laporan',
+                html: '<div id="export-preview-box" class="text-start text-muted py-4 text-center">Memuat preview...</div>',
+                width: '90%',
+                showCloseButton: true,
+                showConfirmButton: true,
+                showDenyButton: true,
+                showCancelButton: true,
+                confirmButtonText: '<i class="bi bi-file-earmark-excel"></i> Download Excel',
+                denyButtonText: '<i class="bi bi-file-earmark-pdf"></i> Download PDF',
+                cancelButtonText: 'Tutup',
+                confirmButtonColor: '#217346',
+                denyButtonColor: '#1E3A5F',
+                cancelButtonColor: '#64748B',
+                didOpen: function() {
+                    const box = document.getElementById('export-preview-box');
+                    Swal.disableButtons();
+
+                    fetch(previewUrl, {
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            credentials: 'same-origin'
+                        })
+                        .then(function(res) {
+                            if (!res.ok) throw new Error('HTTP ' + res.status);
+                            return res.text();
+                        })
+                        .then(function(html) {
+                            box.className = '';
+                            box.innerHTML = html;
+                        })
+                        .catch(function() {
+                            box.innerHTML = 'Preview gagal dimuat. Anda tetap bisa langsung mengunduh file.';
+                        })
+                        .finally(function() {
+                            Swal.enableButtons();
+                        });
+                }
+            }).then(function(result) {
+                if (result.isConfirmed) {
+                    window.location.href = link.href; // Excel (jalur export lama)
+                } else if (result.isDenied) {
+                    window.location.href = pdfUrl; // PDF
+                }
+            });
+        });
+        // ======================================================================
+    </script>
 
 </body>
 

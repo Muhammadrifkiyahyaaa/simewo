@@ -58,6 +58,7 @@ class WebsiteMonitorService
         $errorMessage = null;
         $hasSuspiciousContent = false;
         $suspiciousKeywords = null;
+        $suspiciousUrls = null;
 
         $start = microtime(true);
 
@@ -71,7 +72,10 @@ class WebsiteMonitorService
                 $errorMessage = 'Server merespons dengan kode ' . $statusCode . '.';
             }
 
-            [$hasSuspiciousContent, $suspiciousKeywords] = $this->scanForSuspiciousContent($response->body());
+            [$hasSuspiciousContent, $suspiciousKeywords, $suspiciousUrls] = $this->scanForSuspiciousContent(
+                $response->body(),
+                $website->url
+            );
         } catch (ConnectionException $e) {
             [$errorType, $errorMessage] = $this->classifyConnectionError($e->getMessage());
         } catch (\Throwable $e) {
@@ -95,6 +99,7 @@ class WebsiteMonitorService
             'ssl_expires_at' => $sslExpiresAt,
             'has_suspicious_content' => $hasSuspiciousContent,
             'suspicious_keywords' => $suspiciousKeywords,
+            'suspicious_urls' => $suspiciousUrls,
             'checked_at' => now(),
             'batch_id' => $batchId,
         ]);
@@ -103,11 +108,12 @@ class WebsiteMonitorService
     /**
      * Memindai HTML halaman untuk kata kunci judol yang aktif di database.
      *
-     * @return array{0: bool, 1: ?string} [ditemukan?, daftar kata kunci yang cocok]
+     * @return array{0: bool, 1: ?string, 2: ?string} [ditemukan?, kata kunci yang cocok, URL situs judi]
      */
-    private function scanForSuspiciousContent(string $html): array
+    private function scanForSuspiciousContent(string $html, string $siteUrl): array
     {
-        $normalized = strtolower(substr($html, 0, 500000));
+        $html = substr($html, 0, 500000);
+        $normalized = strtolower($html);
         $matched = [];
 
         foreach ($this->getKeywords() as $keyword) {
@@ -117,10 +123,112 @@ class WebsiteMonitorService
         }
 
         if (empty($matched)) {
-            return [false, null];
+            return [false, null, null];
         }
 
-        return [true, implode(', ', $matched)];
+        return [true, implode(', ', $matched), $this->extractSuspiciousUrls($html, $siteUrl)];
+    }
+
+    /**
+     * Mengambil URL situs judi dari HTML: link/URL ke domain LAIN (bukan domain
+     * website itu sendiri) yang URL-nya atau teks link-nya mengandung kata kunci.
+     * Maksimal 5 URL, dipisah baris baru. Null jika tidak ditemukan.
+     */
+    private function extractSuspiciousUrls(string $html, string $siteUrl): ?string
+    {
+        $siteHost = $this->baseHost($siteUrl);
+
+        $keywords = [];
+        foreach ($this->getKeywords() as $keyword) {
+            $normalizedKeyword = $this->normalizeForMatch($keyword);
+            if (strlen($normalizedKeyword) >= 4) {
+                $keywords[] = $normalizedKeyword;
+            }
+        }
+
+        if (empty($keywords)) {
+            return null;
+        }
+
+        // [url => teks link yang sudah dinormalisasi]
+        $candidates = [];
+
+        if (preg_match_all('~<a\s[^>]*?href\s*=\s*["\']([^"\']+)["\'][^>]*>(.*?)</a>~is', $html, $links, PREG_SET_ORDER)) {
+            foreach ($links as $link) {
+                $url = $this->cleanUrl($link[1]);
+                if ($url !== null) {
+                    $candidates[$url] = ($candidates[$url] ?? '') . $this->normalizeForMatch(strip_tags($link[2]));
+                }
+            }
+        }
+
+        if (preg_match_all('~https?://[^\s"\'<>()\[\]\\\\]+~i', $html, $rawUrls)) {
+            foreach ($rawUrls[0] as $raw) {
+                $url = $this->cleanUrl($raw);
+                if ($url !== null && !isset($candidates[$url])) {
+                    $candidates[$url] = '';
+                }
+            }
+        }
+
+        $found = [];
+
+        foreach ($candidates as $url => $anchorText) {
+            $host = $this->baseHost($url);
+
+            if ($host === '') {
+                continue;
+            }
+
+            // Lewati link ke website itu sendiri (termasuk subdomainnya)
+            if ($siteHost !== '' && ($host === $siteHost || str_ends_with($host, '.' . $siteHost))) {
+                continue;
+            }
+
+            $normalizedUrl = $this->normalizeForMatch($url);
+
+            foreach ($keywords as $keyword) {
+                if (str_contains($normalizedUrl, $keyword) || str_contains($anchorText, $keyword)) {
+                    $found[$url] = true;
+                    break;
+                }
+            }
+
+            if (count($found) >= 5) {
+                break;
+            }
+        }
+
+        return empty($found) ? null : implode("\n", array_keys($found));
+    }
+
+    private function cleanUrl(string $raw): ?string
+    {
+        $url = trim(html_entity_decode($raw, ENT_QUOTES | ENT_HTML5));
+
+        if (str_starts_with($url, '//')) {
+            $url = 'https:' . $url;
+        }
+
+        $url = rtrim($url, '.,;');
+
+        if (!preg_match('~^https?://[^/\s]+~i', $url)) {
+            return null;
+        }
+
+        return substr($url, 0, 300);
+    }
+
+    private function baseHost(string $url): string
+    {
+        $host = strtolower((string) parse_url($url, PHP_URL_HOST));
+
+        return (string) preg_replace('/^www\./', '', $host);
+    }
+
+    private function normalizeForMatch(string $text): string
+    {
+        return (string) preg_replace('/[^a-z0-9]/', '', strtolower($text));
     }
 
     private function getKeywords(): array

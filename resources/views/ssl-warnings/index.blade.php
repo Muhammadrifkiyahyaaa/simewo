@@ -6,7 +6,7 @@
 <div class="topbar">
     <h5>Peringatan SSL Akan Kedaluwarsa</h5>
     <a href="{{ route('ssl-warnings.export') }}" class="btn btn-success btn-sm">
-        Export Excel
+        Export Laporan
     </a>
 </div>
 

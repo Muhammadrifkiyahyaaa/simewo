@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\ExportPreviewController;
 use App\Http\Controllers\MonitoringController;
 use App\Http\Controllers\OpdController;
 use App\Http\Controllers\SslWarningController;
@@ -9,41 +11,16 @@ use App\Http\Controllers\OpdSummaryReportController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\WebsiteController;
 use App\Http\Controllers\ProfileController;
-use App\Models\Website;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ComplianceScoreController;
 
 Route::get('/', function () {
-    return redirect()->route('opd.index');
+    return redirect()->route('dashboard');
 });
 
 Route::middleware('auth')->group(function () {
 
-    Route::get('/dashboard', function () {
-        $totalWebsite = Website::count();
-
-        $totalUp = Website::whereHas('monitoringLogs', function ($query) {
-            $query->whereIn('id', function ($sub) {
-                $sub->selectRaw('MAX(id)')->from('monitoring_logs')->groupBy('website_id');
-            })->where('is_up', true);
-        })->count();
-
-        $totalDown = $totalWebsite - $totalUp;
-
-        $websites = Website::with(['opd', 'monitoringLogs' => function ($query) {
-            $query->latest('checked_at')->limit(1);
-        }])->get();
-
-        $sslWarningCount = SslWarningController::latestSslWarningsQueryStatic()->count();
-
-        $suspiciousCount = Website::whereHas('monitoringLogs', function ($query) {
-            $query->whereIn('id', function ($sub) {
-                $sub->selectRaw('MAX(id)')->from('monitoring_logs')->groupBy('website_id');
-            })->where('has_suspicious_content', true);
-        })->count();
-
-        return view('dashboard', compact('totalWebsite', 'totalUp', 'totalDown', 'websites', 'sslWarningCount', 'suspiciousCount'));
-    })->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Semua user login (admin & staf) hanya bisa melihat
     Route::resource('opd', OpdController::class)->only(['index']);
@@ -66,6 +43,10 @@ Route::middleware('auth')->group(function () {
 
     Route::get('/compliance-score', [ComplianceScoreController::class, 'index'])->name('compliance-score.index');
     Route::get('/compliance-score/export', [ComplianceScoreController::class, 'export'])->name('compliance-score.export');
+
+    // Preview laporan sebelum diunduh + unduh versi PDF
+    Route::get('/export-preview/{report}', [ExportPreviewController::class, 'preview'])->name('export.preview');
+    Route::get('/export-pdf/{report}', [ExportPreviewController::class, 'pdf'])->name('export.pdf');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

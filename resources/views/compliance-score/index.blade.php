@@ -7,7 +7,7 @@
     <h5>Compliance Score</h5>
     <div class="d-flex gap-2">
         <a href="{{ route('compliance-score.export', request()->query()) }}" class="btn btn-success btn-sm">
-            Export Excel
+            Export Laporan
         </a>
         @if (auth()->user()->role === 'admin')
         <form action="{{ route('compliance-score.recalculate') }}" method="POST">

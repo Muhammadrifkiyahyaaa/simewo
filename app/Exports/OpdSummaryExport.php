@@ -35,7 +35,6 @@ class OpdSummaryExport implements FromCollection, WithHeadings, WithMapping
             'Jumlah Website',
             'Website Hidup',
             'Website Down',
-            'Belum Ada Data',
         ];
     }
 
@@ -48,6 +47,7 @@ class OpdSummaryExport implements FromCollection, WithHeadings, WithMapping
             return $lastLog && $lastLog->is_up;
         })->count();
 
+        // Tetap dihitung agar website yang belum dicek tidak masuk ke "Down"
         $belumDicek = $opd->websites->filter(function ($website) {
             return $website->monitoringLogs->isEmpty();
         })->count();
@@ -62,7 +62,6 @@ class OpdSummaryExport implements FromCollection, WithHeadings, WithMapping
             $totalWebsite,
             $hidup,
             $down,
-            $belumDicek,
         ];
     }
 }

@@ -7,7 +7,7 @@
     <h5>Riwayat Monitoring</h5>
     <div class="d-flex gap-2">
         <a href="{{ route('monitoring.export', request()->query()) }}" class="btn btn-success btn-sm">
-            Export Excel
+            Export Laporan
         </a>
         @if (auth()->user()->role === 'admin')
         <form action="{{ route('monitoring.run') }}" method="POST">
@@ -25,16 +25,6 @@
         Menampilkan <strong>{{ $logs->count() }} hasil</strong> dari pengecekan yang baru saja dilakukan.
     </div>
     <a href="{{ route('monitoring.index') }}" class="text-decoration-underline text-reset">Tampilkan semua riwayat &raquo;</a>
-</div>
-@endif
-
-@if ($suspiciousOnly)
-<div class="alert alert-danger d-flex align-items-center justify-content-between mb-3">
-    <div>
-        <i class="bi bi-exclamation-octagon me-2"></i>
-        Sedang menampilkan hanya riwayat yang <strong>terindikasi konten judol</strong>.
-    </div>
-    <a href="{{ route('monitoring.index') }}" class="text-decoration-underline text-reset">Tampilkan semua &raquo;</a>
 </div>
 @endif
 

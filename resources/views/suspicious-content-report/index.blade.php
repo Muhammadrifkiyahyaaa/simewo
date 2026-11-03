@@ -6,7 +6,7 @@
 <div class="topbar">
     <h5>Laporan Konten Mencurigakan / Judi Online</h5>
     <a href="{{ route('suspicious-content-report.export', request()->query()) }}" class="btn btn-success btn-sm">
-        Export Excel
+        Export Laporan
     </a>
 </div>
 
@@ -52,6 +52,7 @@
                     <th>Waktu Terdeteksi</th>
                     <th>Nama OPD</th>
                     <th>URL Website</th>
+                    <th>URL Situs Judi</th>
                     <th>Kata Kunci Terdeteksi</th>
                     <th>PIC OPD</th>
                 </tr>
@@ -63,12 +64,22 @@
                     <td>{{ $log->checked_at->format('d M Y H:i') }}</td>
                     <td>{{ $log->website->opd->nama_opd }}</td>
                     <td><a href="{{ $log->website->url }}" target="_blank">{{ $log->website->url }}</a></td>
+                    <td>
+                        @if ($log->suspicious_urls)
+                        @foreach (explode("\n", $log->suspicious_urls) as $badUrl)
+                        {{-- Sengaja teks biasa (bukan link) agar tidak sengaja terbuka --}}
+                        <div class="text-break small text-danger">{{ $badUrl }}</div>
+                        @endforeach
+                        @else
+                        <span class="text-muted">-</span>
+                        @endif
+                    </td>
                     <td><span class="badge bg-danger">{{ $log->suspicious_keywords ?? '-' }}</span></td>
                     <td>{{ $log->website->opd->pic_name }}</td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6" class="text-center text-muted">Tidak ada konten mencurigakan yang terdeteksi.</td>
+                    <td colspan="7" class="text-center text-muted">Tidak ada konten mencurigakan yang terdeteksi.</td>
                 </tr>
                 @endforelse
             </tbody>

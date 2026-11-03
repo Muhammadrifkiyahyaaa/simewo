@@ -25,6 +25,7 @@ class OpdSummaryReportController extends Controller
                 return $lastLog && $lastLog->is_up;
             })->count();
 
+            // Tetap dihitung agar website yang belum dicek tidak masuk ke "Down"
             $belumDicek = $opd->websites->filter(function ($website) {
                 return $website->monitoringLogs->isEmpty();
             })->count();
@@ -36,7 +37,6 @@ class OpdSummaryReportController extends Controller
                 'total' => $totalWebsite,
                 'hidup' => $hidup,
                 'down' => $down,
-                'belum_dicek' => $belumDicek,
             ];
         });
 

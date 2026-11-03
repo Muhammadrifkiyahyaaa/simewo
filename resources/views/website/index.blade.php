@@ -35,8 +35,7 @@
                 @if (auth()->user()->role === 'admin')
                 <td>
                     <a href="{{ route('website.edit', $website->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                    <form action="{{ route('website.destroy', $website->id) }}" method="POST" class="d-inline"
-                        onsubmit="return confirm('Yakin hapus data ini?')">
+                    <form action="{{ route('website.destroy', $website->id) }}" method="POST" class="d-inline form-delete">
                         @csrf
                         @method('DELETE')
                         <button type="submit" class="btn btn-sm btn-danger">Hapus</button>

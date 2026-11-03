@@ -21,6 +21,7 @@ class MonitoringLog extends Model
         'ssl_expires_at',
         'has_suspicious_content',
         'suspicious_keywords',
+        'suspicious_urls',
         'checked_at',
         'batch_id',
     ];

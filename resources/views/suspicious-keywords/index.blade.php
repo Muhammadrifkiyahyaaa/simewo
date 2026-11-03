@@ -46,8 +46,8 @@
                     <td>{{ $kw->keyword }}</td>
                     @if (auth()->user()->role === 'admin')
                     <td>
-                        <form action="{{ route('suspicious-keywords.destroy', $kw) }}" method="POST"
-                            onsubmit="return confirm('Hapus kata &quot;{{ $kw->keyword }}&quot; dari daftar?');">
+                        <form action="{{ route('suspicious-keywords.destroy', $kw) }}" method="POST" class="form-delete"
+                            data-confirm-text="Hapus kata &quot;{{ $kw->keyword }}&quot; dari daftar?">
                             @csrf
                             @method('DELETE')
                             <button type="submit" class="btn btn-danger btn-sm">Hapus</button>

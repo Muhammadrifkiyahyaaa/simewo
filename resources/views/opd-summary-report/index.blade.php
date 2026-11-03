@@ -6,7 +6,7 @@
 <div class="topbar">
     <h5>Laporan Rekap per OPD</h5>
     <a href="{{ route('opd-summary-report.export', request()->query()) }}" class="btn btn-success btn-sm">
-        Export Excel
+        Export Laporan
     </a>
 </div>
 
@@ -39,7 +39,6 @@
                     <th class="text-center">Jumlah Website</th>
                     <th class="text-center">Hidup</th>
                     <th class="text-center">Down</th>
-                    <th class="text-center">Belum Dicek</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,11 +51,10 @@
                     <td class="text-center">{{ $row['total'] }}</td>
                     <td class="text-center"><span class="badge bg-success">{{ $row['hidup'] }}</span></td>
                     <td class="text-center"><span class="badge bg-danger">{{ $row['down'] }}</span></td>
-                    <td class="text-center"><span class="badge bg-secondary">{{ $row['belum_dicek'] }}</span></td>
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="8" class="text-center text-muted">Tidak ada data OPD.</td>
+                    <td colspan="7" class="text-center text-muted">Tidak ada data OPD.</td>
                 </tr>
                 @endforelse
             </tbody>
