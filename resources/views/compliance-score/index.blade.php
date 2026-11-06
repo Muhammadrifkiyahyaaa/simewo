@@ -3,6 +3,64 @@
 @section('title', 'Compliance Score')
 
 @section('content')
+<style>
+    /* ===== Banner informasi (gaya sama dengan banner dashboard) ===== */
+    .sw-alert {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 14px 18px;
+        border: 1px solid var(--sw-border);
+        border-left-width: 5px;
+        border-radius: 10px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .sw-alert-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .sw-alert-body {
+        flex: 1 1 260px;
+        min-width: 0;
+    }
+
+    .sw-alert-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        line-height: 1.3;
+    }
+
+    .sw-alert-text {
+        font-size: 0.88rem;
+        color: var(--sw-text);
+        margin-top: 2px;
+    }
+
+    .sw-alert-warning {
+        background-color: #FFFBEB;
+        border-color: #FDE68A;
+        border-left-color: var(--sw-dot-warning);
+    }
+
+    .sw-alert-warning .sw-alert-icon {
+        background-color: #FEF3C7;
+        color: #B45309;
+    }
+
+    .sw-alert-warning .sw-alert-title {
+        color: #92400E;
+    }
+</style>
+
 <div class="topbar">
     <h5>Compliance Score</h5>
     <div class="d-flex gap-2">
@@ -18,10 +76,15 @@
     </div>
 </div>
 
-<div class="alert alert-warning py-2 mb-3">
-    <i class="bi bi-info-circle me-1"></i>
-    Skor Uptime dihitung dari data monitoring 30 hari terakhir. Website yang belum punya data monitoring
-    dalam 30 hari terakhir akan tampil "Belum ada data" dan tidak diikutkan dalam perhitungan.
+<div class="sw-alert sw-alert-warning mb-3" role="note">
+    <div class="sw-alert-icon"><i class="bi bi-info-circle-fill"></i></div>
+    <div class="sw-alert-body">
+        <div class="sw-alert-title">Cara perhitungan Skor Uptime</div>
+        <div class="sw-alert-text">
+            Skor Uptime dihitung dari data monitoring <strong>30 hari terakhir</strong>. Website yang belum punya data monitoring
+            dalam 30 hari terakhir akan tampil "Belum ada data" dan tidak diikutkan dalam perhitungan.
+        </div>
+    </div>
 </div>
 
 <form method="GET" action="{{ route('compliance-score.index') }}" class="bg-white p-3 rounded shadow-sm mb-3 row g-2 align-items-end">

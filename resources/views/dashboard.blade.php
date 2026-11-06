@@ -3,36 +3,154 @@
 @section('title', 'Dashboard')
 
 @section('content')
+<style>
+    /* ===== Banner peringatan dashboard ===== */
+    .sw-alert {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 14px 18px;
+        border: 1px solid var(--sw-border);
+        border-left-width: 5px;
+        border-radius: 10px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .sw-alert-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .sw-alert-body {
+        flex: 1 1 260px;
+        min-width: 0;
+    }
+
+    .sw-alert-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        line-height: 1.3;
+    }
+
+    .sw-alert-text {
+        font-size: 0.88rem;
+        color: var(--sw-text);
+        margin-top: 2px;
+    }
+
+    .sw-alert-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        background-color: #fff;
+        white-space: nowrap;
+    }
+
+    /* Bahaya (merah lembut) */
+    .sw-alert-danger {
+        background-color: #FEF2F2;
+        border-color: #FECACA;
+        border-left-color: var(--sw-dot-danger);
+    }
+
+    .sw-alert-danger .sw-alert-icon {
+        background-color: #FEE2E2;
+        color: #DC2626;
+    }
+
+    .sw-alert-danger .sw-alert-title {
+        color: #991B1B;
+    }
+
+    .sw-alert-danger .sw-alert-action {
+        border: 1px solid #FCA5A5;
+        color: #B91C1C;
+    }
+
+    .sw-alert-danger .sw-alert-action:hover {
+        background-color: #DC2626;
+        border-color: #DC2626;
+        color: #fff;
+    }
+
+    /* Peringatan (kuning lembut) */
+    .sw-alert-warning {
+        background-color: #FFFBEB;
+        border-color: #FDE68A;
+        border-left-color: var(--sw-dot-warning);
+    }
+
+    .sw-alert-warning .sw-alert-icon {
+        background-color: #FEF3C7;
+        color: #B45309;
+    }
+
+    .sw-alert-warning .sw-alert-title {
+        color: #92400E;
+    }
+
+    .sw-alert-warning .sw-alert-action {
+        border: 1px solid #FCD34D;
+        color: #B45309;
+    }
+
+    .sw-alert-warning .sw-alert-action:hover {
+        background-color: #F59E0B;
+        border-color: #F59E0B;
+        color: #fff;
+    }
+</style>
+
 <h5 class="mb-3">Dashboard</h5>
 
-@if ($suspiciousCount > 0)
-<a href="{{ route('monitoring.index', ['suspicious' => 1]) }}" class="alert alert-danger d-flex align-items-center justify-content-between mb-3 text-decoration-none text-reset" role="alert">
-    <div>
-        <i class="bi bi-exclamation-octagon me-2"></i>
-        <strong>{{ $suspiciousCount }} website</strong> terdeteksi ada indikasi konten mencurigakan (judi online). Segera periksa manual.
-    </div>
-    <span class="text-decoration-underline">Lihat riwayat &raquo;</span>
-</a>
-@endif
+@if ($suspiciousCount > 0 || $totalDown > 0 || $sslWarningCount > 0)
+<div class="d-flex flex-column gap-2 mb-4">
 
-@if ($totalDown > 0)
-<a href="{{ route('opd.index', ['status' => 'down']) }}" class="alert alert-danger d-flex align-items-center justify-content-between mb-3 text-decoration-none text-reset" role="alert">
-    <div>
-        <i class="bi bi-wifi-off me-2"></i>
-        <strong>{{ $totalDown }} website</strong> saat ini berstatus down (tidak bisa diakses).
+    @if ($suspiciousCount > 0)
+    <div class="sw-alert sw-alert-danger" role="alert">
+        <div class="sw-alert-icon"><i class="bi bi-exclamation-octagon-fill"></i></div>
+        <div class="sw-alert-body">
+            <div class="sw-alert-title">Indikasi konten mencurigakan</div>
+            <div class="sw-alert-text"><strong>{{ $suspiciousCount }} website</strong> terdeteksi ada indikasi konten judi online. Segera periksa manual.</div>
+        </div>
+        <a href="{{ route('monitoring.index', ['suspicious' => 1]) }}" class="btn sw-alert-action">Lihat riwayat</a>
     </div>
-    <span class="text-decoration-underline">Lihat daftar &raquo;</span>
-</a>
-@endif
+    @endif
 
-@if ($sslWarningCount > 0)
-<a href="{{ route('ssl-warnings.index') }}" class="alert alert-warning d-flex align-items-center justify-content-between mb-4 text-decoration-none text-reset" role="alert">
-    <div>
-        <i class="bi bi-shield-exclamation me-2"></i>
-        <strong>{{ $sslWarningCount }} website</strong> SSL-nya akan kedaluwarsa dalam 30 hari ke depan.
+    @if ($totalDown > 0)
+    <div class="sw-alert sw-alert-danger" role="alert">
+        <div class="sw-alert-icon"><i class="bi bi-wifi-off"></i></div>
+        <div class="sw-alert-body">
+            <div class="sw-alert-title">Website tidak dapat diakses</div>
+            <div class="sw-alert-text"><strong>{{ $totalDown }} website</strong> saat ini berstatus down.</div>
+        </div>
+        <a href="{{ route('opd.index', ['status' => 'down']) }}" class="btn sw-alert-action">Lihat daftar <i class="bi bi-arrow-right"></i></a>
     </div>
-    <span class="text-decoration-underline">Lihat detail &raquo;</span>
-</a>
+    @endif
+
+    @if ($sslWarningCount > 0)
+    <div class="sw-alert sw-alert-warning" role="alert">
+        <div class="sw-alert-icon"><i class="bi bi-shield-exclamation"></i></div>
+        <div class="sw-alert-body">
+            <div class="sw-alert-title">SSL akan kedaluwarsa</div>
+            <div class="sw-alert-text"><strong>{{ $sslWarningCount }} website</strong> SSL-nya akan kedaluwarsa dalam 30 hari ke depan.</div>
+        </div>
+        <a href="{{ route('ssl-warnings.index') }}" class="btn sw-alert-action">Lihat detail <i class="bi bi-arrow-right"></i></a>
+    </div>
+    @endif
+
+</div>
 @endif
 
 {{-- A. Kartu angka berkonteks --}}

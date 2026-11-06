@@ -1,0 +1,78 @@
+# ============================================================
+# SIMEWO - jalankan semuanya dengan:  docker compose up -d --build
+# Buka di browser:                    http://localhost:8000
+# ============================================================
+x-app-env: &app-env
+    APP_NAME: SIMEWO
+    APP_ENV: production
+    APP_DEBUG: "false"
+    APP_URL: http://localhost:8000
+    APP_KEY: ${APP_KEY:-base64:JQd2OKKd1kpW+odqZwTWE7CLVHt3H4+Q8Xw//xYiOEQ=}
+    APP_LOCALE: en
+    TZ: Asia/Makassar
+    LOG_CHANNEL: stderr
+    DB_CONNECTION: mysql
+    DB_HOST: db
+    DB_PORT: 3306
+    DB_DATABASE: simewo
+    DB_USERNAME: simewo
+    DB_PASSWORD: simewo_pass
+    SESSION_DRIVER: database
+    QUEUE_CONNECTION: database
+    CACHE_STORE: database
+
+services:
+    app:
+        build: .
+        image: simewo-app
+        ports:
+            - "8000:80"
+        environment: *app-env
+        depends_on:
+            db:
+                condition: service_healthy
+        volumes:
+            - simewo_storage:/var/www/html/storage
+        restart: unless-stopped
+
+    # Penjadwal pengecekan otomatis (monitoring:run, tiap jam 22:00-23:59)
+    scheduler:
+        image: simewo-app
+        command: ["php", "artisan", "schedule:work"]
+        environment: *app-env
+        depends_on:
+            app:
+                condition: service_started
+            db:
+                condition: service_healthy
+        volumes:
+            - simewo_storage:/var/www/html/storage
+        restart: unless-stopped
+
+    db:
+        image: mysql:8.0
+        environment:
+            MYSQL_DATABASE: simewo
+            MYSQL_USER: simewo
+            MYSQL_PASSWORD: simewo_pass
+            MYSQL_ROOT_PASSWORD: root_pass
+            TZ: Asia/Makassar
+        command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        volumes:
+            - simewo_db:/var/lib/mysql
+            # File ini otomatis diimpor HANYA saat database pertama kali dibuat
+            - ./simewo.sql:/docker-entrypoint-initdb.d/simewo.sql:ro
+        healthcheck:
+            test:
+                [
+                    "CMD-SHELL",
+                    "mysqladmin ping -h 127.0.0.1 -uroot -proot_pass --silent",
+                ]
+            interval: 5s
+            timeout: 5s
+            retries: 30
+        restart: unless-stopped
+
+volumes:
+    simewo_db:
+    simewo_storage:
