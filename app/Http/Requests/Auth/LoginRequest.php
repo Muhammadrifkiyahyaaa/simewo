@@ -96,9 +96,12 @@ class LoginRequest extends FormRequest
 
     /**
      * Get the rate limiting throttle key for the request.
+     *
+     * Kunci hanya berdasarkan IP (bukan email), sehingga jatah percobaan
+     * tetap tersambung walaupun email yang diketik diganti-ganti.
      */
     public function throttleKey(): string
     {
-        return Str::transliterate(Str::lower($this->string('email')) . '|' . $this->ip());
+        return 'login|' . Str::transliterate((string) $this->ip());
     }
 }

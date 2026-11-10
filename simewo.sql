@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Generation Time: Nov 06, 2026 at 06:04 AM
+-- Generation Time: Nov 10, 2026 at 02:18 AM
 -- Server version: 8.0.30
 -- PHP Version: 8.3.31
 
@@ -281,7 +281,16 @@ INSERT INTO `compliance_scores` (`id`, `website_id`, `skor_domain_resmi`, `skor_
 (243, 10, 20, 30, 50, 100, '2026-11-02 02:31:51', '2026-11-02 02:31:51', '2026-11-02 02:31:51'),
 (244, 11, 20, 30, 50, 100, '2026-11-02 02:31:51', '2026-11-02 02:31:51', '2026-11-02 02:31:51'),
 (245, 15, 20, 30, 50, 100, '2026-11-02 02:31:52', '2026-11-02 02:31:52', '2026-11-02 02:31:52'),
-(246, 16, 0, 30, 50, 80, '2026-11-02 02:31:52', '2026-11-02 02:31:52', '2026-11-02 02:31:52');
+(246, 16, 0, 30, 50, 80, '2026-11-02 02:31:52', '2026-11-02 02:31:52', '2026-11-02 02:31:52'),
+(248, 2, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(249, 3, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(250, 4, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(251, 5, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(252, 9, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(253, 10, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(254, 11, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(255, 15, 20, 30, 50, 100, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30'),
+(256, 16, 0, 30, 50, 80, '2026-11-09 06:28:30', '2026-11-09 06:28:30', '2026-11-09 06:28:30');
 
 -- --------------------------------------------------------
 
@@ -718,7 +727,16 @@ INSERT INTO `monitoring_logs` (`id`, `website_id`, `status_code`, `error_type`, 
 (396, 10, 200, NULL, NULL, 1, 649, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-02 02:31:47', 'aefbda55-0c5d-4bae-b773-33ab21d11164', '2026-11-02 02:31:47', '2026-11-02 02:31:47'),
 (397, 11, 200, NULL, NULL, 1, 295, 1, '2026-12-14 12:40:59', 0, NULL, NULL, '2026-11-02 02:31:47', 'aefbda55-0c5d-4bae-b773-33ab21d11164', '2026-11-02 02:31:47', '2026-11-02 02:31:47'),
 (398, 15, 200, NULL, NULL, 1, 874, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-02 02:31:48', 'aefbda55-0c5d-4bae-b773-33ab21d11164', '2026-11-02 02:31:48', '2026-11-02 02:31:48'),
-(399, 16, 200, NULL, NULL, 1, 2212, 1, '2027-01-26 00:53:54', 1, 'casino online, live casino', 'https://chennaibadmintonclub.com/tournament', '2026-11-02 02:31:51', 'aefbda55-0c5d-4bae-b773-33ab21d11164', '2026-11-02 02:31:51', '2026-11-02 02:31:51');
+(399, 16, 200, NULL, NULL, 1, 2212, 1, '2027-01-26 00:53:54', 1, 'casino online, live casino', 'https://chennaibadmintonclub.com/tournament', '2026-11-02 02:31:51', 'aefbda55-0c5d-4bae-b773-33ab21d11164', '2026-11-02 02:31:51', '2026-11-02 02:31:51'),
+(401, 2, 200, NULL, NULL, 1, 909, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-09 06:28:24', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:24', '2026-11-09 06:28:24'),
+(402, 3, 200, NULL, NULL, 1, 523, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-09 06:28:24', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:24', '2026-11-09 06:28:24'),
+(403, 4, 200, NULL, NULL, 1, 577, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-09 06:28:25', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:25', '2026-11-09 06:28:25'),
+(404, 5, 200, NULL, NULL, 1, 714, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-09 06:28:26', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:26', '2026-11-09 06:28:26'),
+(405, 9, 200, NULL, NULL, 1, 581, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-09 06:28:27', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:27', '2026-11-09 06:28:27'),
+(406, 10, 200, NULL, NULL, 1, 633, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-09 06:28:28', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:28', '2026-11-09 06:28:28'),
+(407, 11, 200, NULL, NULL, 1, 285, 1, '2026-12-14 12:40:59', 0, NULL, NULL, '2026-11-09 06:28:28', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:28', '2026-11-09 06:28:28'),
+(408, 15, 200, NULL, NULL, 1, 550, 1, '2027-01-27 15:59:59', 0, NULL, NULL, '2026-11-09 06:28:29', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:29', '2026-11-09 06:28:29'),
+(409, 16, 200, NULL, NULL, 1, 1378, 1, '2027-01-26 00:53:54', 1, 'casino online, live casino', 'https://hairbraidingsalonbaltimore.com/cornrows', '2026-11-09 06:28:30', '63d5e0b9-3ce3-4ea5-a3ec-a6cc335bd523', '2026-11-09 06:28:30', '2026-11-09 06:28:30');
 
 -- --------------------------------------------------------
 
@@ -739,8 +757,8 @@ CREATE TABLE `notification_reads` (
 --
 
 INSERT INTO `notification_reads` (`id`, `user_id`, `key`, `seen_ids`, `updated_at`) VALUES
-(1, 1, 'down', '399', '2026-11-03 01:23:11'),
-(2, 1, 'suspicious', '399', '2026-11-03 01:19:18'),
+(1, 1, 'down', '409', '2026-11-09 06:28:31'),
+(2, 1, 'suspicious', '399', '2026-11-09 06:24:57'),
 (3, 1, 'ssl', '399', '2026-11-03 01:19:15'),
 (4, 2, 'down', '390', '2026-11-02 02:23:19');
 
@@ -815,6 +833,7 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
+('2NiIwZD28HF3qUXIbxBQntOhYjUHFzU47XoBmeuN', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/157.0.0.0 Safari/537.36 Edg/157.0.0.0', 'eyJfdG9rZW4iOiJYY1dCdW9DUDQxZ3RVSDJRS0JBemEwQ1p3Nk1QUXRhYzJZR1J6OUc1IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9vcGQiLCJyb3V0ZSI6Im9wZC5pbmRleCJ9LCJfZmxhc2giOnsib2xkIjpbXSwibmV3IjpbXX0sInVybCI6W10sImxvZ2luX3dlYl81OWJhMzZhZGRjMmIyZjk0MDE1ODBmMDE0YzdmNThlYTRlMzA5ODlkIjoxfQ==', 1794211762),
 ('GPhB23gS2V5vVZZaXrlDPmD5DKpNo8qj4My7CwWd', 1, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36 Edg/156.0.0.0', 'eyJfdG9rZW4iOiJvSTJnY1BRWnRCN2tyUHdpZ2l4ZDl1RzltUXdxclpkSFpENWI2MVJ4IiwiX3ByZXZpb3VzIjp7InVybCI6Imh0dHA6XC9cLzEyNy4wLjAuMTo4MDAwXC9sYXBvcmFuLXJla2FwLW9wZCIsInJvdXRlIjoib3BkLXN1bW1hcnktcmVwb3J0LmluZGV4In0sIl9mbGFzaCI6eyJvbGQiOltdLCJuZXciOltdfSwidXJsIjpbXSwibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiOjF9', 1793669018);
 
 -- --------------------------------------------------------
@@ -878,8 +897,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `name`, `email`, `role`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
 (1, 'Admin Diskominfo', 'admin@simewo.test', 'admin', NULL, '$2y$12$ujzLg0w3p20J8BeBNOL/Gue4O4NwrtMfjKAnhuXIGQM3lbdl7/rvS', NULL, '2026-09-08 00:49:08', '2026-09-08 00:49:08'),
-(2, 'Staf Diskominfo', 'staf@simewo.test', 'staf', NULL, '$2y$12$8Ot1u/2duAZuZzH3/fF5QOLr3EgEl948OJdtdIprl0DhyuZiGDfXS', NULL, '2026-09-08 21:25:54', '2026-09-08 21:25:54'),
-(5, 'ADA', 'm.rifkiyahya@gmail.com', 'staf', NULL, '$2y$12$pmfMs5l4mSc4a/PYQkqJKOHG0pwI.OO06e8rOs7sJstzKXQtFS2L6', NULL, '2026-10-30 01:19:55', '2026-10-30 01:19:55');
+(2, 'Staf Diskominfo', 'staf@simewo.test', 'staf', NULL, '$2y$12$8Ot1u/2duAZuZzH3/fF5QOLr3EgEl948OJdtdIprl0DhyuZiGDfXS', NULL, '2026-09-08 21:25:54', '2026-09-08 21:25:54');
 
 -- --------------------------------------------------------
 
@@ -1026,7 +1044,7 @@ ALTER TABLE `websites`
 -- AUTO_INCREMENT for table `compliance_scores`
 --
 ALTER TABLE `compliance_scores`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=248;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=257;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -1050,7 +1068,7 @@ ALTER TABLE `migrations`
 -- AUTO_INCREMENT for table `monitoring_logs`
 --
 ALTER TABLE `monitoring_logs`
-  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=401;
+  MODIFY `id` bigint UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=410;
 
 --
 -- AUTO_INCREMENT for table `notification_reads`

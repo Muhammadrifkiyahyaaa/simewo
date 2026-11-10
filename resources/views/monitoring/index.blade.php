@@ -3,6 +3,88 @@
 @section('title', 'Riwayat Monitoring')
 
 @section('content')
+<style>
+    /* ===== Banner informasi (gaya sama dengan banner dashboard & compliance score) ===== */
+    .sw-alert {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        padding: 14px 18px;
+        border: 1px solid var(--sw-border);
+        border-left-width: 5px;
+        border-radius: 10px;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+    }
+
+    .sw-alert-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+        flex-shrink: 0;
+    }
+
+    .sw-alert-body {
+        flex: 1 1 260px;
+        min-width: 0;
+    }
+
+    .sw-alert-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        line-height: 1.3;
+    }
+
+    .sw-alert-text {
+        font-size: 0.88rem;
+        color: var(--sw-text);
+        margin-top: 2px;
+    }
+
+    .sw-alert-action {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 999px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        background-color: #fff;
+        white-space: nowrap;
+    }
+
+    /* Sukses (hijau lembut) */
+    .sw-alert-success {
+        background-color: #F0FDF4;
+        border-color: #BBF7D0;
+        border-left-color: var(--sw-dot-success);
+    }
+
+    .sw-alert-success .sw-alert-icon {
+        background-color: #DCFCE7;
+        color: #16A34A;
+    }
+
+    .sw-alert-success .sw-alert-title {
+        color: #166534;
+    }
+
+    .sw-alert-success .sw-alert-action {
+        border: 1px solid #86EFAC;
+        color: #15803D;
+    }
+
+    .sw-alert-success .sw-alert-action:hover {
+        background-color: #16A34A;
+        border-color: #16A34A;
+        color: #fff;
+    }
+</style>
+
 <div class="topbar">
     <h5>Riwayat Monitoring</h5>
     <div class="d-flex gap-2">
@@ -19,12 +101,17 @@
 </div>
 
 @if (!empty($batchId))
-<div class="alert alert-success d-flex align-items-center justify-content-between mb-3">
-    <div>
-        <i class="bi bi-check2-circle me-2"></i>
-        Menampilkan <strong>{{ $logs->count() }} hasil</strong> dari pengecekan yang baru saja dilakukan.
+<div class="sw-alert sw-alert-success mb-3" role="status">
+    <div class="sw-alert-icon"><i class="bi bi-check-circle-fill"></i></div>
+    <div class="sw-alert-body">
+        <div class="sw-alert-title">Pengecekan selesai</div>
+        <div class="sw-alert-text">
+            Menampilkan <strong>{{ $logs->count() }} hasil</strong> dari pengecekan yang baru saja dilakukan.
+        </div>
     </div>
-    <a href="{{ route('monitoring.index') }}" class="text-decoration-underline text-reset">Tampilkan semua riwayat &raquo;</a>
+    <a href="{{ route('monitoring.index') }}" class="btn sw-alert-action">
+        Tampilkan semua riwayat
+    </a>
 </div>
 @endif
 

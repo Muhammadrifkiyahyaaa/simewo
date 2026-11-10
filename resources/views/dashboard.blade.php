@@ -135,7 +135,7 @@
             <div class="sw-alert-title">Website tidak dapat diakses</div>
             <div class="sw-alert-text"><strong>{{ $totalDown }} website</strong> saat ini berstatus down.</div>
         </div>
-        <a href="{{ route('opd.index', ['status' => 'down']) }}" class="btn sw-alert-action">Lihat daftar <i class="bi bi-arrow-right"></i></a>
+        <a href="{{ route('opd.index', ['status' => 'down']) }}" class="btn sw-alert-action">Lihat daftar</a>
     </div>
     @endif
 
